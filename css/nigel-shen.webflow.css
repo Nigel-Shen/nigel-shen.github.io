@@ -1988,6 +1988,33 @@ li {
   padding: 5px 10px;
 }
 
+.button-inline {
+  padding: 8px 10px;
+  border-radius: 7px;
+  background-color: #00AA55;
+  opacity: 0.8;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.5);
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
+  color: #000;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.button-inline:hover {
+  background-color: #132013;
+  box-shadow: 1px 1px 8px 0 #07246d;
+  color: #fff;
+}
+
+.button-inline:active {
+  background-color: #000;
+  box-shadow: 1px 1px 8px 0 #050f2b;
+}
+
+
 .utility-page-wrap {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2319,12 +2346,19 @@ li {
 
 .text-block-c {
   position: static;
+  float: left;
   font-family: Merriweather, serif;
   font-weight: 700;
   font-size: 20px;
+  font-style: italic;
   text-align: left;
   line-height: 28px;
 }
+
+.inline-link {
+  color: ;
+}
+
 
 .text-block.item {
   position: relative;
@@ -2552,6 +2586,7 @@ li {
 
 .footer-link-three {
   margin-right: 20px;
+  font-family: Merriweather, serif;
   margin-left: 20px;
   color: #1a1b1f;
   text-decoration: none;
@@ -2606,6 +2641,7 @@ li {
 
 .footer-copyright {
   color: #3a4554;
+  font-family: Merriweather, serif;
 }
 
 .footer-legal-block {
@@ -2625,6 +2661,7 @@ li {
 
 .footer-legal-link {
   margin-left: 24px;
+  font-family: Merriweather, serif;
   color: #3a4554;
 }
 
@@ -2778,9 +2815,10 @@ li {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 940px;
+  max-width: 1000px;
   margin-right: auto;
   margin-left: auto;
+  opacity: 0.4;
 }
 
 .hero-wrapper-two {
@@ -2840,6 +2878,8 @@ li {
 
 .block-quote {
   margin-top: 10px;
+  font-family: Merriweather, serif;
+  font-style: italic;
 }
 
 @media screen and (min-width: 1440px) {
