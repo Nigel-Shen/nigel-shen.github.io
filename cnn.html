@@ -607,6 +607,7 @@ select:focus {
 </head>
 <body>
   <article class="markdown-body"><h2>Gradient Descent and Neural Network</h2>
+    <center>Nigel Shen cs5897</center>
 <h3>1. Recap</h3>
 <p>In order to create a neural network with multiple layers, we are supposed to add a non-linear function in each hidden neuron layer; otherwise if the function is linear, then the final output is also linear with respect to the input. That said, for a given set of input $x_i$, we can create a hidden neuron $h_j$ by:</p>
 $$h_j=g\left(\sum_{i=1}^dw_{ij}x_i\right)$$ where $d$ is the number of input, and $g$ is a nonlinear function. In practice, $g$ are often chosen to be the following functions: $\tanh(x)$, $\textrm{sigmoid}(x)=\frac{1}{1+e^{-x}}$, or $\textrm{relu}(x)=\max(0, x)$.
