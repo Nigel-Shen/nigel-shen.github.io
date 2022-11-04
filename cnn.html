@@ -153,19 +153,15 @@ $$w^k_i\rightarrow w^k_i+\alpha\frac{dE}{dw^k_i}= w^k_i+\alpha (y-t)y(1-y)w_kh_k
 <p class="text-block-b">There are a number of strategies to initialize the weights. Thus we start with a “bad” strategy of initialization: Making weights too large or too small. Consider the $\textrm{sigmoid}$ function, and you will find that, if $|x|&gt;&gt;1$, the gradient of  $\textrm{sigmoid}(x)$ will be close to zero: $$\lim_{x\rightarrow\infty}\frac{d}{dx}\textrm{sigmoid}(x)=0$$ Consequently, the neural network will converge very slowly.</p>
 <p class="text-block-b">Instead, we can initialize randomly in a small interval, e.g., $w_k\sim\textrm{Unif}[-0.01,0.01]$. However, if we have a large number of neurons, the sum of all the weighted values will still be very big. In this case we can “normalize” the interval with the number of neurons: $w_k\sim\textrm{Unif}[-0.01/\sqrt{n},0.01/\sqrt{n}]$.</p>
 <p class="text-block-b">A more detailed strategy is given by Gloria and Bengio (2010):</p>
-<ul>
-<li>For shallow neural networks, use interval $$\left[-\frac{1}{\sqrt{n}}, \frac{1}{\sqrt{n}}\right]$$ where $n$ is the size of the previous layer;</li>
-<li>For deep neural networks, use interval $$\left[-\sqrt{\frac{6}{n_j+n_{j+1}}}, -\sqrt{\frac{6}{n_j+n_{j+1}}}\ \right]$$ where $n_j$ is the size of the previous layer and $n_{j+1}$ is the size of current layer.</li>
-</ul>
+<p class="text-block-b">  - For shallow neural networks, use interval $$\left[-\frac{1}{\sqrt{n}}, \frac{1}{\sqrt{n}}\right]$$ where $n$ is the size of the previous layer;</p><br />
+<p class="text-block-b">  - For deep neural networks, use interval $$\left[-\sqrt{\frac{6}{n_j+n_{j+1}}}, -\sqrt{\frac{6}{n_j+n_{j+1}}}\ \right]$$ where $n_j$ is the size of the previous layer and $n_{j+1}$ is the size of current layer.</p><br />
 <h4>3.2 Multi-class Classification</h4>
 <p class="text-block-b">Sometimes we need to classify with multiple classes ($&gt;2$), then we cannot simply return a scalar to represent the probability of the input belonging to one class against the other. Instead, we need a vector $\textbf{y}$ which represents all the probabilities of all the classes. This vector is called the “One-hot vector”. Notice that the sum of all components of $\textbf{y}$ should be $1$, so we introduce a posterior probability distribution by a softmax defined as: $$\textrm{softmax}(y_i)=\frac{e^{y_i}}{\sum_{}e^{y_j}}$$ The predicted class, in line with our intuition, is the output node $y_i$ with the highest value.</p>
 <h4>3.3 Training Tricks: Mini Batch SGD</h4>
 <p class="text-block-b">For a classical gradient descent method, one starts with the initial guess $\textrm{w}_0$ and iterate over: $$\textrm{w}_{i+1}= \textrm{w}_i-\alpha\nabla f(\textrm{w}_i, D)$$For stochastic gradient descent, we take a few sample datapoints $d$ that satisfy distribution $D$, i.e., $d\sim D$, and iterate the following: $$\textrm{w}_{i+1}= \textrm{w}_i-\alpha\nabla f(\textrm{w}_i, d)$$<br />
 For Mini Batch SGD, we “combine” these two schemes by sampling a “batch” multiple datapoints $d\sim D$, and:</p>
-<ul>
-<li>Forward propagate it through the network, so that we can obtain the loss or error function;</li>
-<li>backward propagate to find the gradients $\nabla f(\textbf{w}, d)$</li>
-</ul>
+<p class="text-block-b">  - Forward propagate it through the network, so that we can obtain the loss or error function;</p><br />
+<p class="text-block-b">  - Backward propagate to find the gradients $\nabla f(\textbf{w}, d)$</p><br />
 <p class="text-block-b">After that, we can update our weight function: $$\textrm{w}_{i+1}= \textrm{w}_i-\alpha\nabla f(\textrm{w}_i, d) $$</p>
 </article>
   
