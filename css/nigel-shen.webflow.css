@@ -2818,7 +2818,7 @@ li {
   max-width: 1000px;
   margin-right: auto;
   margin-left: auto;
-  opacity: 0.4;
+  background-color: hsla(0, 0%, 100%, 0.4);
 }
 
 .hero-wrapper-two {
