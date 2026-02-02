@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ScrollProject from '../components/ScrollProject.astro';
+---
+
+<BaseLayout title="Research">
+  
+  <div class="min-h-[80vh] flex items-center justify-center py-20 px-6">
+    <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+      
+      <div class="lg:col-span-5 grid grid-cols-2 gap-4 auto-rows-[minmax(140px,auto)]">
+        
+        <div class="col-span-1 row-span-2 p-6 rounded-3xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 flex flex-col justify-between group hover:border-blue-500/50 transition-colors">
+          <div class="p-3 bg-blue-100 dark:bg-blue-600/30 rounded-2xl w-fit text-blue-600 dark:text-blue-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-blue-600 dark:text-blue-400 mb-1">Primary Field</div>
+            <div class="text-xl font-bold text-slate-900 dark:text-white">Fluid Dynamics</div>
+          </div>
+        </div>
+
+        <div class="col-span-1 p-6 rounded-3xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 flex flex-col justify-between hover:border-amber-500/50 transition-colors">
+          <div class="text-amber-600 dark:text-amber-400">
+             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <div class="font-bold text-slate-900 dark:text-white">Energy & Thermo</div>
+        </div>
+
+        <div class="col-span-1 p-6 rounded-3xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800 flex flex-col justify-between hover:border-purple-500/50 transition-colors">
+          <div class="text-purple-600 dark:text-purple-400">
+            <span class="font-mono text-lg font-bold">∂x</span>
+          </div>
+          <div class="font-bold text-slate-900 dark:text-white">PDE Solvers</div>
+        </div>
+
+      </div>
+
+      <div class="lg:col-span-7 flex flex-col justify-center">
+        <h1 class="text-6xl md:text-8xl font-bold mb-8 pb-2 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
+          Research Highlights
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed mb-10 max-w-2xl">
+          My work sits at the intersection of <strong class="text-blue-600 dark:text-blue-400">physics</strong> and <strong class="text-blue-600 dark:text-blue-400">algorithms</strong>.
+          I develop high-order numerical methods to solve complex fluid and thermodynamic problems that standard solvers cannot handle.
+        </p>
+
+        <div class="flex items-center gap-4">
+          <div class="h-px w-12 bg-slate-300 dark:bg-slate-700"></div>
+          <span class="text-sm font-mono text-slate-400 uppercase tracking-widest">Scroll to explore simulations</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <ScrollProject
+    id="project-1"
+    title="Wave Propagation Analysis"
+    timeline="Fall 2025"
+    description="Studying high-order time integration schemes on 3D structured grids. The goal was to minimize dispersion errors in long-time simulations."
+    tools={["Julia", "Makie", "HPC"]}
+    highlights={["4th-order convergence achieved.", "40% cost reduction."]}
+    links={{ code: "#" }}
+    
+    folderPath="/projects/test-sim/"
+    filenamePrefix="frame_"
+    frameCount={100}
+    mobileImage="/projects/test-sim/frame_050.jpg"
+  />
+
+  <div class="h-[50vh] bg-white dark:bg-slate-950 flex items-center justify-center">
+    <p class="text-slate-400 font-mono text-sm">© 2026 Nigel Shen. More research coming soon.</p>
+  </div>
+
+</BaseLayout>

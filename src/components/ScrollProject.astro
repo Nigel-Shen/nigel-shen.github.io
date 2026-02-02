@@ -1,0 +1,173 @@
+---
+interface Props {
+  id: string;
+  // Animation Props
+  folderPath: string;
+  filenamePrefix: string;
+  fileExtension?: string;
+  frameCount: number;
+  mobileImage: string;
+  
+  // Bento Data Props
+  title: string;
+  timeline: string;
+  description: string;
+  tools: string[];
+  highlights: string[];
+  links?: { paper?: string; code?: string };
+}
+
+const { 
+  id, folderPath, filenamePrefix, fileExtension = "jpg", frameCount, mobileImage,
+  title, timeline, description, tools, highlights, links
+} = Astro.props;
+---
+
+<section id={id} class="relative" style="height: 400vh;">
+  
+  <div class="sticky top-0 h-screen w-full overflow-hidden">
+    
+    <div class="absolute inset-0 z-0 bg-white dark:bg-slate-950">
+      <div class="absolute inset-0 md:hidden flex items-center justify-center bg-black">
+        <img src={mobileImage} alt={title} class="w-full h-full object-cover opacity-80" />
+      </div>
+      <canvas id={`${id}-canvas`} class="hidden md:block absolute inset-0 w-full h-full"></canvas>
+    </div>
+
+    <div class="absolute inset-0 z-10 flex items-center px-6 md:px-12 pointer-events-none">
+      
+      <div id={`${id}-overlay`} class="w-full md:w-5/12 flex flex-col gap-4 opacity-0 -translate-x-10 transition-all duration-1000">
+        
+        <div class="p-6 md:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-2xl pointer-events-auto">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/30 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+              {timeline}
+            </span>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+            {title}
+          </h2>
+          <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm md:text-base">
+            {description}
+          </p>
+          
+          {links && (
+            <div class="flex gap-3 mt-6">
+              {links.paper && (
+                <a href={links.paper} class="px-4 py-2 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs hover:opacity-80 transition-opacity">
+                  Read Paper
+                </a>
+              )}
+              {links.code && (
+                <a href={links.code} class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                  View Code
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          
+          <div class="p-5 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-xl pointer-events-auto">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Tech Stack</h3>
+            <div class="flex flex-wrap gap-2">
+              {tools.map(tool => (
+                <span class="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-mono font-medium">
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div class="col-span-1 p-5 rounded-3xl bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-md border border-blue-100 dark:border-blue-800 shadow-xl pointer-events-auto">
+             <h3 class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-3">Key Result</h3>
+             <ul class="space-y-2">
+               {highlights.slice(0,2).map(item => (
+                 <li class="flex items-start gap-2 text-xs text-slate-700 dark:text-slate-200">
+                   <span class="mt-1 h-1 w-1 rounded-full bg-blue-500 shrink-0"></span>
+                   {item}
+                 </li>
+               ))}
+             </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script define:vars={{ id, folderPath, filenamePrefix, fileExtension, frameCount }}>
+  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+
+  if (isDesktop) {
+    const section = document.getElementById(id);
+    const canvas = document.getElementById(`${id}-canvas`);
+    const overlay = document.getElementById(`${id}-overlay`); // <--- New Target
+    const context = canvas.getContext("2d");
+
+    const images = [];
+    let imagesLoaded = 0;
+
+    const drawFrame = (img) => {
+      if (!img || !img.complete) return;
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const imgRatio = img.width / img.height;
+      
+      // "Fit Width" Logic (Covers full width, centers vertically)
+      const dw = cw;
+      const dh = cw / imgRatio;
+      const dy = (ch - dh) / 2;
+      
+      context.fillStyle = document.documentElement.classList.contains('dark') ? "#020617" : "#ffffff";
+      context.fillRect(0, 0, cw, ch);
+      context.drawImage(img, 0, dy, dw, dh);
+    };
+
+    const preloadImages = () => {
+      for (let i = 1; i <= frameCount; i++) {
+        const img = new Image();
+        const paddedIndex = String(i).padStart(3, '0');
+        img.src = `${folderPath}${filenamePrefix}${paddedIndex}.${fileExtension}`;
+        img.onload = () => {
+            imagesLoaded++;
+            if (imagesLoaded === 1) drawFrame(img);
+        };
+        images.push(img);
+      }
+    };
+    preloadImages();
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      if (images.length > 0) drawFrame(images[0]);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    const handleScroll = () => {
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const scrollableDistance = rect.height - window.innerHeight;
+      const scrolled = -rect.top;
+      let progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+      const frameIndex = Math.min(frameCount - 1, Math.floor(progress * frameCount));
+
+      if (images[frameIndex]) requestAnimationFrame(() => drawFrame(images[frameIndex]));
+
+      // FADE IN OVERLAY (Start earlier at 0.05, end later at 0.9)
+      if (progress > 0.05 && progress < 0.9) {
+        overlay.classList.remove('opacity-0', '-translate-x-10');
+      } else {
+        overlay.classList.add('opacity-0', '-translate-x-10');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+  }
+</script>

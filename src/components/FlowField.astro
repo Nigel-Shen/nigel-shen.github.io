@@ -1,0 +1,83 @@
+<canvas id="flow-canvas" class="absolute inset-0 w-full h-full opacity-40"></canvas>
+
+<script>
+  const canvas = document.getElementById('flow-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  let width, height;
+  let particles = [];
+  
+  // Resize handling
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Particle Logic
+  class Particle {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.vx = 0;
+      this.vy = 0;
+      this.size = Math.random() * 4 + 1;
+    }
+
+    update(mouseX, mouseY) {
+      // Simple "flow" math: particles move away from mouse like a fluid obstruction
+      const dx = this.x - mouseX;
+      const dy = this.y - mouseY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      
+      // Force field
+      if (dist < 200) {
+        const force = (200 - dist) / 200;
+        this.vx += (dx / dist) * force * 0.5;
+        this.vy += (dy / dist) * force * 0.5;
+      }
+
+      // Base flow (simulating a wind tunnel moving right)
+      this.vx += (2 - this.vx) * 0.02; // Return to base speed
+      this.vy += (0 - this.vy) * 0.02; 
+
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Wrap around screen (Periodic Boundary Conditions!)
+      if (this.x > width) this.x = 0;
+      if (this.x < 0) this.x = width;
+      if (this.y > height) this.y = 0;
+      if (this.y < 0) this.y = height;
+    }
+
+    draw() {
+      ctx.fillStyle = `rgba(100, 150, 255, ${this.vx * 0.4})`; // Color based on speed
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Initialize Particles
+  for (let i = 0; i < 256; i++) particles.push(new Particle());
+
+  // Mouse tracking
+  let mouse = { x: -1000, y: -1000 };
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  // Animation Loop
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    particles.forEach(p => {
+      p.update(mouse.x, mouse.y);
+      p.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>

@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+// 1. Fetch all markdown files in this folder
+const allPosts = await Astro.glob('./*.md');
+
+// 2. Sort posts by date (Newest first)
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf()
+);
+---
+
+<BaseLayout title="Technical Blog">
+  <div class="min-h-screen py-24 px-6 bg-slate-50 dark:bg-slate-950">
+    
+    <div class="max-w-4xl mx-auto">
+      
+      <div class="mb-16">
+        <div class="flex items-center gap-3 mb-4">
+           <a href="/blog" class="px-3 py-1 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold uppercase hover:bg-blue-100 hover:text-blue-600 transition-colors">
+             ← Back to Hub
+           </a>
+           <span class="text-blue-600 dark:text-blue-400 font-mono text-sm">/blog/tech</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6">
+          Code & Physics
+        </h1>
+        <p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
+          Exploring the intersection of high-performance computing, numerical methods, and open-source software.
+        </p>
+      </div>
+
+      <div class="space-y-8">
+        
+        {sortedPosts.map((post) => (
+          <article class="group relative flex flex-col md:flex-row gap-6 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-400/30 transition-all duration-300">
+            
+            <a href={post.url} class="absolute inset-0 z-0"></a>
+
+            <div class="md:w-32 shrink-0 flex flex-col md:items-end md:text-right">
+              <span class="text-2xl font-bold text-slate-300 dark:text-slate-700 group-hover:text-blue-500 transition-colors">
+                {new Date(post.frontmatter.date).getFullYear()}
+              </span>
+              <span class="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                {new Date(post.frontmatter.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </span>
+            </div>
+
+            <div class="flex-grow z-10">
+              
+              <div class="mb-3">
+                <span class="inline-block px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300">
+                  {post.frontmatter.tag}
+                </span>
+              </div>
+              
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {post.frontmatter.title}
+              </h2>
+              
+              <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                {post.frontmatter.description}
+              </p>
+
+              <div class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                Read Article 
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+              </div>
+            </div>
+
+          </article>
+        ))}
+
+      </div>
+
+    </div>
+  </div>
+</BaseLayout> 
