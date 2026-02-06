@@ -57,17 +57,17 @@ import ScrollProject from '../components/ScrollProject.astro';
 
   <ScrollProject
     id="project-1"
-    title="Wave Propagation Analysis"
-    timeline="Fall 2025"
-    description="Studying high-order time integration schemes on 3D structured grids. The goal was to minimize dispersion errors in long-time simulations."
-    tools={["Julia", "Makie", "HPC"]}
-    highlights={["4th-order convergence achieved.", "40% cost reduction."]}
-    links={{ code: "#" }}
+    title="Wavelet-Based Adaptive Immersed Interface Method"
+    timeline="Fall 2023 - Fall 2025"
+    description="We develop a novel wavelet transform algorithm on general smooth irregular domains. This enables a new class of adaptive strategies for immersed interface methods (IIM), achieving robust error control and significant computational savings for fluid dynamics simulations with complex geometries."
+    tools={["Julia", "IIM", "Wavelets", "Adaptivity"]}
+    highlights={["Compatible with high order IIM.", "Adaptive at the vicinity of interfaces."]}
+    links={{ code: "#", paper: "#" }}
     
-    folderPath="/projects/test-sim/"
-    filenamePrefix="frame_"
-    frameCount={100}
-    mobileImage="/projects/test-sim/frame_050.jpg"
+    folderPath="/projects/wavelet/"
+    filenamePrefix="snapshot_dk"
+    frameCount={96}
+    mobileImage="/projects/wavelet/snapshot_dk96.png"
   />
 
   <div class="h-[50vh] bg-white dark:bg-slate-950 flex items-center justify-center">
