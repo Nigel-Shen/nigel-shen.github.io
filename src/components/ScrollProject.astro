@@ -1,173 +1,182 @@
 ---
 interface Props {
   id: string;
-  // Animation Props
-  folderPath: string;
-  filenamePrefix: string;
-  fileExtension?: string;
-  frameCount: number;
-  mobileImage: string;
-  
-  // Bento Data Props
   title: string;
   timeline: string;
   description: string;
   tools: string[];
   highlights: string[];
-  links?: { paper?: string; code?: string };
+  links: { code: string; paper: string };
+  folderPath: string;
+  filenamePrefix: string;
+  frameCount: number;
+  mobileImage: string;
 }
 
 const { 
-  id, folderPath, filenamePrefix, fileExtension = "png", frameCount, mobileImage,
-  title, timeline, description, tools, highlights, links
+  id, title, timeline, description, tools, highlights, links,
+  folderPath, filenamePrefix, frameCount, mobileImage 
 } = Astro.props;
 ---
 
-<section id={id} class="relative" style="height: 400vh;">
+<section id={id} class="relative w-full h-[300vh]">
   
-  <div class="sticky top-0 h-screen w-full overflow-hidden">
+  <div class="sticky top-0 h-screen w-full flex items-center justify-center p-4 md:p-8 overflow-hidden">
     
-    <div class="absolute inset-0 z-0 bg-white dark:bg-slate-950">
-      <div class="absolute inset-0 md:hidden flex items-center justify-center bg-black">
-        <img src={mobileImage} alt={title} class="w-full h-full object-cover opacity-80" />
-      </div>
-      <canvas id={`${id}-canvas`} class="hidden md:block absolute inset-0 w-full h-full"></canvas>
-    </div>
-
-    <div class="absolute inset-0 z-10 flex items-center px-6 md:px-12 pointer-events-none">
+    <div class="relative w-full h-full max-w-[1600px] bg-white dark:bg-slate-950 rounded-[2rem] border-[3px] border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col">
       
-      <div id={`${id}-overlay`} class="w-full md:w-5/12 flex flex-col gap-4 opacity-0 -translate-x-10 transition-all duration-1000">
+      <div class="h-10 shrink-0 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center px-6 justify-between">
+        <div class="flex gap-2">
+          <div class="w-3 h-3 rounded-full bg-red-400/80"></div>
+          <div class="w-3 h-3 rounded-full bg-amber-400/80"></div>
+          <div class="w-3 h-3 rounded-full bg-green-400/80"></div>
+        </div>
+        <div class="font-mono text-xs text-slate-400 uppercase tracking-widest">
+          {folderPath.split('/').pop()}.jl — Simulation View
+        </div>
+        <div class="w-12"></div>
+      </div>
+
+      <div class="relative w-full flex-grow overflow-hidden">
         
-        <div class="p-6 md:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-2xl pointer-events-auto">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/30 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-              {timeline}
-            </span>
-          </div>
-          <h2 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
-            {title}
-          </h2>
-          <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm md:text-base">
-            {description}
-          </p>
-          
-          {links && (
-            <div class="flex gap-3 mt-6">
-              {links.paper && (
-                <a href={links.paper} class="px-4 py-2 rounded-lg bg-blue-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs hover:opacity-80 transition-opacity">
-                  Read Paper
-                </a>
-              )}
-              {links.code && (
-                <a href={links.code} class="px-4 py-2 rounded-lg border border-blue-300 dark:border-blue-700 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-blue-50 dark:hover:bg-blue-800 transition-colors">
-                  View Code
-                </a>
-              )}
-            </div>
-          )}
+        <div class="absolute inset-0 z-0 flex items-center justify-center bg-slate-50 dark:bg-black/50">
+           <canvas id={`canvas-${id}`} class="w-full h-full object-cover opacity-0 transition-opacity duration-700"></canvas>
+           <img 
+             id={`fallback-${id}`}
+             src={mobileImage} 
+             class="absolute inset-0 w-full h-full object-cover lg:hidden"
+             alt={`${title} Snapshot`} 
+           />
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          
-          <div class="p-5 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-xl pointer-events-auto">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Tech Stack</h3>
+        <div class="relative z-10 w-full h-full pointer-events-none flex items-center px-4 md:px-12">
+          <div class="pointer-events-auto w-full md:w-[500px] shrink-0 p-8 rounded-2xl bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xl transition-all duration-500 flex flex-col gap-6">
+            
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 text-[10px] font-bold tracking-wider uppercase bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full">
+                  {timeline}
+                </span>
+                <div class="flex items-center gap-1.5">
+                   <span class="relative flex h-2 w-2">
+                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                     <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                   </span>
+                   <span class="text-[10px] font-bold text-slate-400 uppercase">Live Render</span>
+                </div>
+              </div>
+
+              <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-3">
+                {title}
+              </h2>
+              <p class="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                {description}
+              </p>
+            </div>
+
             <div class="flex flex-wrap gap-2">
               {tools.map(tool => (
-                <span class="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-mono font-medium">
+                <span class="px-2 py-1 text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded border border-slate-200 dark:border-slate-700">
                   {tool}
                 </span>
               ))}
             </div>
-          </div>
 
-          <div class="col-span-1 p-5 rounded-3xl bg-blue-80/90 dark:bg-blue-900/40 backdrop-blur-md border border-blue-300 dark:border-blue-800 shadow-xl pointer-events-auto">
-             <h3 class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-3">Key Result</h3>
-             <ul class="space-y-2">
-               {highlights.slice(0,2).map(item => (
-                 <li class="flex items-start gap-2 text-xs text-slate-200 dark:text-slate-200">
-                   <span class="mt-1 h-1 w-1 rounded-full bg-blue-500 shrink-0"></span>
-                   {item}
-                 </li>
-               ))}
-             </ul>
-          </div>
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+              <ul class="space-y-2">
+                {highlights.map(item => (
+                  <li class="flex items-start gap-2 text-xs md:text-sm text-slate-700 dark:text-slate-300">
+                    <span class="mt-1.5 w-1 h-1 rounded-full bg-blue-500 shrink-0"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
+            <div class="flex gap-3">
+              <a href={links.paper} class="flex-1 py-2.5 text-center text-sm rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:opacity-90 transition-opacity">
+                Read Paper
+              </a>
+              <a href={links.code} class="flex-1 py-2.5 text-center text-sm rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                Code
+              </a>
+            </div>
+
+          </div>
         </div>
 
       </div>
-    </div>
 
+    </div>
   </div>
 </section>
 
-<script define:vars={{ id, folderPath, filenamePrefix, fileExtension, frameCount }}>
-  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+<script define:vars={{ id, folderPath, filenamePrefix, frameCount }}>
+  const canvas = document.getElementById(`canvas-${id}`);
+  const fallback = document.getElementById(`fallback-${id}`);
+  const context = canvas.getContext("2d");
 
-  if (isDesktop) {
-    const section = document.getElementById(id);
-    const canvas = document.getElementById(`${id}-canvas`);
-    const overlay = document.getElementById(`${id}-overlay`); // <--- New Target
-    const context = canvas.getContext("2d");
+  // Preload Logic
+  const images = { light: [], dark: [] };
+  let imagesLoaded = 0;
+  
+  const getFrameName = (i) => {
+    return `${i + 1}`;
+  };
 
-    const images = [];
-    let imagesLoaded = 0;
-
-    const drawFrame = (img) => {
-      if (!img || !img.complete) return;
-      const cw = canvas.width;
-      const ch = canvas.height;
-      const imgRatio = img.width / img.height;
+  const loadImages = () => {
+    for (let i = 0; i < frameCount; i++) {
+      const imgL = new Image();
+      const imgD = new Image();
+      const suffix = getFrameName(i);
       
-      // "Fit Width" Logic (Covers full width, centers vertically)
-      const dw = cw;
-      const dh = cw / imgRatio;
-      const dy = (ch - dh) / 2;
+      imgL.src = `${folderPath}${filenamePrefix}${suffix}.png`;
+      imgD.src = `${folderPath}${filenamePrefix}${suffix}.png`;
       
-      context.fillStyle = document.documentElement.classList.contains('dark') ? "#020617" : "#ffffff";
-      context.fillRect(0, 0, cw, ch);
-      context.drawImage(img, 0, dy, dw, dh);
-    };
+      images.light.push(imgL);
+      images.dark.push(imgD);
+      
+      imgL.onload = () => {
+        imagesLoaded++;
+        if(imagesLoaded === 1) render(0);
+      };
+    }
+  };
 
-    const preloadImages = () => {
-      for (let i = 1; i <= frameCount; i++) {
-        const img = new Image();
-        const paddedIndex = String(i);
-        img.src = `${folderPath}${filenamePrefix}${paddedIndex}.${fileExtension}`;
-        img.onload = () => {
-            imagesLoaded++;
-            if (imagesLoaded === 1) drawFrame(img);
-        };
-        images.push(img);
-      }
-    };
-    preloadImages();
+  const render = (index) => {
+    const isDark = document.documentElement.classList.contains('dark');
+    const currentSet = isDark ? images.dark : images.light;
+    const img = currentSet[index];
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      if (images.length > 0) drawFrame(images[0]);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
+    if (img && img.complete) {
+      canvas.style.opacity = '1';
+      if(fallback) fallback.style.opacity = '0';
 
-    const handleScroll = () => {
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      const scrollableDistance = rect.height - window.innerHeight;
-      const scrolled = -rect.top;
-      let progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
-      const frameIndex = Math.min(frameCount - 1, Math.floor(progress * frameCount));
+      const { width, height } = canvas.getBoundingClientRect();
+      canvas.width = width * window.devicePixelRatio;
+      canvas.height = height * window.devicePixelRatio;
+      context.scale(window.devicePixelRatio, window.devicePixelRatio);
+      
+      context.clearRect(0, 0, width, height);
+      
+      const ratio = Math.max(width / img.width, height / img.height);
+      const centerShift_x = (width - img.width * ratio) / 2;
+      const centerShift_y = (height - img.height * ratio) / 2;
+      
+      context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+    }
+  };
 
-      if (images[frameIndex]) requestAnimationFrame(() => drawFrame(images[frameIndex]));
+  const section = document.getElementById(id);
+  window.addEventListener('scroll', () => {
+    const rect = section.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    let progress = -rect.top / (rect.height - viewportHeight);
+    progress = Math.max(0, Math.min(1, progress));
+    const frameIndex = Math.min(frameCount - 1, Math.floor(progress * frameCount));
+    requestAnimationFrame(() => render(frameIndex));
+  });
 
-      // FADE IN OVERLAY (Start earlier at 0.05, end later at 0.9)
-      if (progress > 0.05 && progress < 0.9) {
-        overlay.classList.remove('opacity-0', '-translate-x-10');
-      } else {
-        overlay.classList.add('opacity-0', '-translate-x-10');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-  }
+  loadImages();
+  new MutationObserver(() => requestAnimationFrame(() => render(0))).observe(document.documentElement, { attributes: true });
 </script>
